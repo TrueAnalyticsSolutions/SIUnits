@@ -491,6 +491,9 @@ namespace SIUnits {
       return units;
     }
 
+    public static SIUnits.Abstracts.AUnit GetUnit(string name){
+      return GetUnits().FirstOrDefault(o => o.Name == name);
+    }
     public static decimal? Convert(string expression, string targetSymbol) {
       Regex reg = new Regex(@"(\d+)(.*)");
       if (reg.IsMatch(expression)) {
