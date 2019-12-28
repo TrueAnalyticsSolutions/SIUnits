@@ -48,9 +48,10 @@
     <Compile Include="ObjectModels\DerivedUnit.cs" />
     <Compile Include="Abstracts\AUnit.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="SIUnits.cs" />
+    <Compile Include="UnitManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObjectModels\FactoredUnit.cs" />
+    <Compile Include="Enums\Types.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

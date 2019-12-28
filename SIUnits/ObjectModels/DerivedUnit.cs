@@ -4,7 +4,8 @@ namespace SIUnits {
   /// <summary>
   /// An implementation of an abstract Unit that represents a unit that is an unfactored derivative of a SI Base Unit.
   /// </summary>
-  public class DerivedUnit:AUnit {
+  public class DerivedUnit : AUnit {
+
     /// <summary>
     /// Provides a reference to SI Base and SI Derived Units and their impact on this unit.
     /// </summary>
