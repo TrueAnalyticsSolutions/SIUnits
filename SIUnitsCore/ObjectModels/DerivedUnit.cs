@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace SIUnits {
     /// <summary>
-    /// An implementation of an abstract Unit that represents a unit that is an unfactored derivative of a SI Base Unit.
+    /// An implementation of a Base Unit that represents a unit that is an unfactored derivative of a SI Base Unit.
     /// </summary>
     public class DerivedUnit : Abstracts.BaseUnit {
 
@@ -18,11 +18,13 @@ namespace SIUnits {
             Multiplication = 0,
             Division = 1
         }
+
         public DerivedUnit() {
             this.Sources = new Dictionary<string, DerivationMethods>();
         }
+
         public DerivedUnit(string symbol, string name, SIUnits.UnitType baseQuantity) : base(symbol, name, baseQuantity) {
+
         }
     }
-
 }

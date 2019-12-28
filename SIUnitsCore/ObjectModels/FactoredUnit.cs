@@ -1,7 +1,8 @@
 ﻿using SIUnits.Abstracts;
+
 namespace SIUnits {
     /// <summary>
-    /// An implementation of an abstract Unit that can be used to convert derivatives of a SI Base Unit to this new derivative unit
+    /// An implementation of a Base Unit that can be used to convert derivatives of a SI Base Unit to this new derivative unit
     /// </summary>
     public class FactoredUnit : Abstracts.BaseUnit {
         /// <summary>
@@ -14,9 +15,10 @@ namespace SIUnits {
         public decimal Factor { get; set; }
 
         public FactoredUnit() : base() {
+
         }
         public FactoredUnit(string shortName, string name, UnitType type) : base(shortName, name, type) {
+
         }
     }
-
 }

@@ -3,200 +3,203 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Xml;
 using System.Text.RegularExpressions;
+using SIUnits.Abstracts;
 
 namespace SIUnits {
     public static class UnitManager {
+        private static List<BaseUnit> _units { get; set; } = new List<BaseUnit>();
+
         /// <summary>
         /// Gets a list of BaseUnits
         /// </summary>
         /// <returns></returns>
-        public static List<SIUnits.Abstracts.BaseUnit> GetUnits() {
-            List<SIUnits.Abstracts.BaseUnit> units = new List<SIUnits.Abstracts.BaseUnit>();
-
-            units.Add(new BaseUnit("kg", "Kilogram", UnitType.Mass));
-            units.Add(new BaseUnit("m", "Meter", UnitType.Length));
-            units.Add(new BaseUnit("s", "Second", UnitType.Time));
-            units.Add(new BaseUnit("mol", "Mole", UnitType.Substance));
-            units.Add(new BaseUnit("A", "Ampere", UnitType.ElectricalCurrent));
-            units.Add(new BaseUnit("K", "Kelvin", UnitType.ThermodynamicTemperature));
-            units.Add(new BaseUnit("cd", "Candela", UnitType.LuminousIntensity));
-            units.Add(new BaseUnit("bit", "Bit", UnitType.DigitalStorage));
+        public static IEnumerable<BaseUnit> GetUnits() {
+            if (_units.Any())
+                return _units;
+            _units.Add(new BasicUnit("kg", "Kilogram", UnitType.Mass));
+            _units.Add(new BasicUnit("m", "Meter", UnitType.Length));
+            _units.Add(new BasicUnit("s", "Second", UnitType.Time));
+            _units.Add(new BasicUnit("mol", "Mole", UnitType.Substance));
+            _units.Add(new BasicUnit("A", "Ampere", UnitType.ElectricalCurrent));
+            _units.Add(new BasicUnit("K", "Kelvin", UnitType.ThermodynamicTemperature));
+            _units.Add(new BasicUnit("cd", "Candela", UnitType.LuminousIntensity));
+            _units.Add(new BasicUnit("bit", "Bit", UnitType.DigitalStorage));
 
             #region DerivedUnits
-            units.Add(new DerivedUnit("m³", "Cubic Meter", UnitType.Volume) {
+            _units.Add(new DerivedUnit("m³", "Cubic Meter", UnitType.Volume) {
                 Formula = "m³",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "m", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("m²", "Square Meter", UnitType.Area) {
+            _units.Add(new DerivedUnit("m²", "Square Meter", UnitType.Area) {
                 Formula = "m²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "m", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("m/s", "Meters per Second", UnitType.Velocity) {
+            _units.Add(new DerivedUnit("m/s", "Meters per Second", UnitType.Velocity) {
                 Formula = "m/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "m", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("m/s²", "Metric Acceleration", UnitType.Acceleration) {
+            _units.Add(new DerivedUnit("m/s²", "Metric Acceleration", UnitType.Acceleration) {
                 Formula = "m/s²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Division },
                     { "m/s", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("N", "Newton", UnitType.Force) {
+            _units.Add(new DerivedUnit("N", "Newton", UnitType.Force) {
                 Formula = "kg*m/s²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "kg", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "m/s²", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("J", "Joule", UnitType.Energy) {
+            _units.Add(new DerivedUnit("J", "Joule", UnitType.Energy) {
                 Formula = "N*m",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "m", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "N", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("kat", "Katal", UnitType.CatalyticActivity) {
+            _units.Add(new DerivedUnit("kat", "Katal", UnitType.CatalyticActivity) {
                 Formula = "mol/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "mol", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "Wb", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("C", "Coulomb", UnitType.ElectricCharge) {
+            _units.Add(new DerivedUnit("C", "Coulomb", UnitType.ElectricCharge) {
                 Formula = "A*s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "A", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("degC", "Degrees Celsius", UnitType.CelsiusTemperature) {
+            _units.Add(new DerivedUnit("degC", "Degrees Celsius", UnitType.CelsiusTemperature) {
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "K", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("lx", "Lux", UnitType.Illuminance) {
+            _units.Add(new DerivedUnit("lx", "Lux", UnitType.Illuminance) {
                 Formula = "lm/m²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "m²", SIUnits.DerivedUnit.DerivationMethods.Division },
                     { "lm", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("Pa", "Pascal", UnitType.Pressure) {
+            _units.Add(new DerivedUnit("Pa", "Pascal", UnitType.Pressure) {
                 Formula = "N/m²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "N", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "m²", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("W", "Watt", UnitType.Power) {
+            _units.Add(new DerivedUnit("W", "Watt", UnitType.Power) {
                 Formula = "J/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "J", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("Wb", "Weber", UnitType.MagneticFlux) {
+            _units.Add(new DerivedUnit("Wb", "Weber", UnitType.MagneticFlux) {
                 Formula = "V*s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "V", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("F", "Farad", UnitType.Capacitance) {
+            _units.Add(new DerivedUnit("F", "Farad", UnitType.Capacitance) {
                 Formula = "C/V",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "C", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "V", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("lm", "Lumen", UnitType.LuminousFlux) {
+            _units.Add(new DerivedUnit("lm", "Lumen", UnitType.LuminousFlux) {
                 Formula = "cd*sr",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "cd", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "sr", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("sr", "Steradian", UnitType.SolidAngle) {
+            _units.Add(new DerivedUnit("sr", "Steradian", UnitType.SolidAngle) {
                 Formula = "m²/m²=1"
             });
-            units.Add(new DerivedUnit("Ω", "Ohm", UnitType.Resistance) {
+            _units.Add(new DerivedUnit("Ω", "Ohm", UnitType.Resistance) {
                 Formula = "V/A",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "V", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "A", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("V", "Volt", UnitType.Voltage) {
+            _units.Add(new DerivedUnit("V", "Volt", UnitType.Voltage) {
                 Formula = "W/A",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "W", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "A", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("H", "Henry", UnitType.Inductance) {
+            _units.Add(new DerivedUnit("H", "Henry", UnitType.Inductance) {
                 Formula = "Wb/A",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "Wb", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "A", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("Bq", "Becquaerel", UnitType.Activity) {
+            _units.Add(new DerivedUnit("Bq", "Becquaerel", UnitType.Activity) {
                 Formula = "1/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("Gy", "Gray", UnitType.AbsorbedDose) {
+            _units.Add(new DerivedUnit("Gy", "Gray", UnitType.AbsorbedDose) {
                 Formula = "J/kg",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "J", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "kg", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("Sv", "Slevert", UnitType.DoseEquivalent) {
+            _units.Add(new DerivedUnit("Sv", "Slevert", UnitType.DoseEquivalent) {
                 Formula = "J/kg",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "J", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "kg", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("Hz", "Hertz", UnitType.Frequency) {
+            _units.Add(new DerivedUnit("Hz", "Hertz", UnitType.Frequency) {
                 Formula = "1/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "s", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("T", "Tesla", UnitType.MagneticFluxDensity) {
+            _units.Add(new DerivedUnit("T", "Tesla", UnitType.MagneticFluxDensity) {
                 Formula = "Wb/m²",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "Wb", SIUnits.DerivedUnit.DerivationMethods.Multiplication },
                     { "m²", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("S", "Slemens", UnitType.Conductance) {
+            _units.Add(new DerivedUnit("S", "Slemens", UnitType.Conductance) {
                 Formula = "1/Ω",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "Ω", SIUnits.DerivedUnit.DerivationMethods.Division }
                 }
             });
-            units.Add(new DerivedUnit("rad", "Radian", UnitType.PlaneAngle) {
+            _units.Add(new DerivedUnit("rad", "Radian", UnitType.PlaneAngle) {
                 Formula = "m/m=1"
             });
-            units.Add(new DerivedUnit("byte", "Byte", UnitType.DigitalStorage) {
+            _units.Add(new DerivedUnit("byte", "Byte", UnitType.DigitalStorage) {
                 Formula = "bit*8",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "bit", DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new DerivedUnit("bit/s", "Bit per Second", UnitType.DataTransferRate) {
+            _units.Add(new DerivedUnit("bit/s", "Bit per Second", UnitType.DataTransferRate) {
                 Formula = "bit/s",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "bit", DerivedUnit.DerivationMethods.Multiplication },
@@ -206,259 +209,259 @@ namespace SIUnits {
             #endregion
 
             #region FactoredUnits
-            units.Add(new FactoredUnit("kB", "Kilobyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("kB", "Kilobyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -1)
             });
-            units.Add(new FactoredUnit("kbit/s", "Kilobits per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("kbit/s", "Kilobits per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -1)
             });
-            units.Add(new FactoredUnit("MB", "Megabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("MB", "Megabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000²",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -2)
             });
-            units.Add(new FactoredUnit("Mbit/s", "Megabits per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Mbit/s", "Megabits per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000²",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -2)
             });
-            units.Add(new FactoredUnit("GB", "Gigabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("GB", "Gigabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000³",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -3)
             });
-            units.Add(new FactoredUnit("Gbit/s", "Gigabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Gbit/s", "Gigabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000³",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -3)
             });
-            units.Add(new FactoredUnit("TB", "Terabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("TB", "Terabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000^4",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -4)
             });
-            units.Add(new FactoredUnit("Tbit/s", "Terabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Tbit/s", "Terabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000^4",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -4)
             });
-            units.Add(new FactoredUnit("PB", "Petabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("PB", "Petabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000^5",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -5)
             });
-            units.Add(new FactoredUnit("Pbit/s", "Petabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Pbit/s", "Petabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000^5",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -5)
             });
-            units.Add(new FactoredUnit("EB", "Exabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("EB", "Exabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000^6",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -6)
             });
-            units.Add(new FactoredUnit("Ebit/s", "Exabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Ebit/s", "Exabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000^6",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -6)
             });
-            units.Add(new FactoredUnit("ZB", "Zettabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("ZB", "Zettabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000^7",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -7)
             });
-            units.Add(new FactoredUnit("Zbit/s", "Zettabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Zbit/s", "Zettabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000^7",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -7)
             });
-            units.Add(new FactoredUnit("YB", "Yottabyte", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("YB", "Yottabyte", UnitType.DigitalStorage) {
                 Formula = "byte*1000^8",
                 DerivedFrom = "byte",
                 Factor = (decimal)Math.Pow(1000, -8)
             });
-            units.Add(new FactoredUnit("Ybit/s", "Yottabit per Second", UnitType.DigitalStorage) {
+            _units.Add(new FactoredUnit("Ybit/s", "Yottabit per Second", UnitType.DigitalStorage) {
                 Formula = "bit/s/1000^8",
                 DerivedFrom = "bit/s",
                 Factor = (decimal)Math.Pow(1000, -8)
             });
-            units.Add(new FactoredUnit("in", "Inch", UnitType.Length) {
+            _units.Add(new FactoredUnit("in", "Inch", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)39.3701
             });
-            units.Add(new FactoredUnit("ft", "Foot", UnitType.Length) {
+            _units.Add(new FactoredUnit("ft", "Foot", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)3.28084
             });
-            units.Add(new FactoredUnit("in²", "Square Inch", UnitType.Length) {
+            _units.Add(new FactoredUnit("in²", "Square Inch", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)1550
             });
-            units.Add(new FactoredUnit("ft²", "Square Foot", UnitType.Length) {
+            _units.Add(new FactoredUnit("ft²", "Square Foot", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)10.7639
             });
-            units.Add(new FactoredUnit("in³", "Cubic Inch", UnitType.Length) {
+            _units.Add(new FactoredUnit("in³", "Cubic Inch", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)61023.7
             });
-            units.Add(new FactoredUnit("ft³", "Cubic Foot", UnitType.Length) {
+            _units.Add(new FactoredUnit("ft³", "Cubic Foot", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)35.3147
             });
-            units.Add(new FactoredUnit("mm", "Millimeter", UnitType.Length) {
+            _units.Add(new FactoredUnit("mm", "Millimeter", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)1000
             });
-            units.Add(new FactoredUnit("cm", "Centimeter", UnitType.Length) {
+            _units.Add(new FactoredUnit("cm", "Centimeter", UnitType.Length) {
                 DerivedFrom = "m",
                 Factor = (decimal)100
             });
-            units.Add(new FactoredUnit("lb", "Pound", UnitType.Mass) {
+            _units.Add(new FactoredUnit("lb", "Pound", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)2.20462
             });
-            units.Add(new FactoredUnit("oz", "Ounce", UnitType.Mass) {
+            _units.Add(new FactoredUnit("oz", "Ounce", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)35.274
             });
-            units.Add(new FactoredUnit("g", "Gram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("g", "Gram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 3)
             });
-            units.Add(new FactoredUnit("mg", "Milligram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("mg", "Milligram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 6)
             });
-            units.Add(new FactoredUnit("µg", "Microgram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("µg", "Microgram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 9)
             });
-            units.Add(new FactoredUnit("ng", "Nanogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("ng", "Nanogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 12)
             });
-            units.Add(new FactoredUnit("pg", "Picogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("pg", "Picogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 15)
             });
-            units.Add(new FactoredUnit("fg", "femtogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("fg", "femtogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 18)
             });
-            units.Add(new FactoredUnit("ag", "Attogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("ag", "Attogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 21)
             });
-            units.Add(new FactoredUnit("zg", "Zeptogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("zg", "Zeptogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 24)
             });
-            units.Add(new FactoredUnit("yg", "Yoctogram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("yg", "Yoctogram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 27)
             });
-            units.Add(new FactoredUnit("Mg", "Megagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Mg", "Megagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 3)
             });
-            units.Add(new FactoredUnit("Gg", "Gigagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Gg", "Gigagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 6)
             });
-            units.Add(new FactoredUnit("Tg", "Teragram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Tg", "Teragram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 9)
             });
-            units.Add(new FactoredUnit("Pg", "Petagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Pg", "Petagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 12)
             });
-            units.Add(new FactoredUnit("Eg", "Exagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Eg", "Exagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 15)
             });
-            units.Add(new FactoredUnit("Zg", "Zettagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Zg", "Zettagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 18)
             });
-            units.Add(new FactoredUnit("Yg", "Yottagram", UnitType.Mass) {
+            _units.Add(new FactoredUnit("Yg", "Yottagram", UnitType.Mass) {
                 DerivedFrom = "kg",
                 Factor = (decimal)Math.Pow(10, 21)
             });
-            units.Add(new FactoredUnit("zJ", "Zeptojoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("zJ", "Zeptojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, -21)
             });
-            units.Add(new FactoredUnit("pJ", "Picojoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("pJ", "Picojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, -12)
             });
-            units.Add(new FactoredUnit("nJ", "Nanojoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("nJ", "Nanojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, -9)
             });
-            units.Add(new FactoredUnit("μJ", "Microjoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("μJ", "Microjoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, -6)
             });
-            units.Add(new FactoredUnit("mJ", "Millijoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("mJ", "Millijoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, -3)
             });
-            units.Add(new FactoredUnit("kJ", "Kilojoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("kJ", "Kilojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 3)
             });
-            units.Add(new FactoredUnit("MJ", "Megajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("MJ", "Megajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 6)
             });
-            units.Add(new FactoredUnit("GJ", "Gigajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("GJ", "Gigajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 9)
             });
-            units.Add(new FactoredUnit("TJ", "Terajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("TJ", "Terajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 12)
             });
-            units.Add(new FactoredUnit("PJ", "Petajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("PJ", "Petajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 15)
             });
-            units.Add(new FactoredUnit("EJ", "Exajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("EJ", "Exajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 18)
             });
-            units.Add(new FactoredUnit("ZJ", "Zettajoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("ZJ", "Zettajoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 21)
             });
-            units.Add(new FactoredUnit("YJ", "Kilojoule", UnitType.Energy) {
+            _units.Add(new FactoredUnit("YJ", "Kilojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 24)
             });
             #endregion
-            units.Add(new DerivedUnit("Wh", "Watt Hour", UnitType.Energy) {
+            _units.Add(new DerivedUnit("Wh", "Watt Hour", UnitType.Energy) {
                 Formula = "J*3.6*10E+3",
                 Sources = new Dictionary<string, SIUnits.DerivedUnit.DerivationMethods>(){
                     { "J", SIUnits.DerivedUnit.DerivationMethods.Multiplication }
                 }
             });
-            units.Add(new FactoredUnit("kW", "Kilowatt", UnitType.Power) {
+            _units.Add(new FactoredUnit("kW", "Kilowatt", UnitType.Power) {
                 DerivedFrom = "W",
                 Factor = (decimal)Math.Pow(10, -3)
             });
-            units.Add(new FactoredUnit("kWh", "Kilowatt Hour", UnitType.Power) {
+            _units.Add(new FactoredUnit("kWh", "Kilowatt Hour", UnitType.Power) {
                 DerivedFrom = "Wh",
                 Factor = (decimal)Math.Pow(10, 3)
             });
 
-            return units;
+            return _units;
         }
 
         /// <summary>
@@ -499,7 +502,7 @@ namespace SIUnits {
         /// <param name="targetSymbol">Unit symbol of the target value</param>
         /// <returns>Converted value</returns>
         public static decimal? Convert(decimal val, string sourceSymbol, string targetSymbol) {
-            List<SIUnits.Abstracts.BaseUnit> units = SIUnits.UnitManager.GetUnits();
+            IEnumerable<SIUnits.Abstracts.BaseUnit> units = SIUnits.UnitManager.GetUnits();
             SIUnits.Abstracts.BaseUnit source = units.FirstOrDefault(o => o.Symbol == sourceSymbol);
             SIUnits.Abstracts.BaseUnit target = units.FirstOrDefault(o => o.Symbol == targetSymbol);
 
