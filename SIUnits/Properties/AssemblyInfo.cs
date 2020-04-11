@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SIUnits")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An object-oriented framework for utilizing SI Units")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("True Analytics Manufacturing Solutions")]
 [assembly: AssemblyProduct("SIUnits")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
