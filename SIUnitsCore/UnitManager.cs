@@ -206,6 +206,12 @@ namespace SIUnits {
                     { "s", DerivedUnit.DerivationMethods.Division }
                 }
             });
+            _units.Add(new DerivedUnit("fl oz", "Fluid Ounce", UnitType.Volume) {
+                Formula = "m³/33814",
+                Sources = new Dictionary<string, DerivedUnit.DerivationMethods>(){
+                    { "m³", DerivedUnit.DerivationMethods.Multiplication }
+                }
+            });
             #endregion
 
             #region FactoredUnits
@@ -444,6 +450,39 @@ namespace SIUnits {
             _units.Add(new FactoredUnit("YJ", "Kilojoule", UnitType.Energy) {
                 DerivedFrom = "J",
                 Factor = (decimal)Math.Pow(10, 24)
+            });
+
+            _units.Add(new FactoredUnit("mL", "Milliliter", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 29.5735m
+            });
+            _units.Add(new FactoredUnit("L", "Liter", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 1m / 33.814m
+            });
+            _units.Add(new FactoredUnit("tsp", "Teaspoon", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 6
+            });
+            _units.Add(new FactoredUnit("tbsp", "Tablespoon", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 2
+            });
+            _units.Add(new FactoredUnit("c", "Cup", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 1m / 8m
+            });
+            _units.Add(new FactoredUnit("pt", "Pint", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 1m / 16m
+            });
+            _units.Add(new FactoredUnit("qt", "Quart", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 1m / 32m
+            });
+            _units.Add(new FactoredUnit("gal", "Gallon", UnitType.Volume) {
+                DerivedFrom = "fl oz",
+                Factor = 1m / 128m
             });
             #endregion
             _units.Add(new DerivedUnit("Wh", "Watt Hour", UnitType.Energy) {
