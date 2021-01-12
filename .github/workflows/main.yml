@@ -13,9 +13,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@main
       with:
-        dotnet-version: 2.2.108
+        dotnet-version: '3.0.100-rc1-014190'
     - name: Build with dotnet
       run: dotnet build --configuration Release
       
@@ -35,9 +35,9 @@ jobs:
     
     steps:
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@main
         with:
-          dotnet-version: 2.2.108
+          dotnet-version: '3.0.100-rc1-014190'
 
       - name: Download Artifact
         uses: actions/download-artifact@v1
@@ -45,7 +45,7 @@ jobs:
           name: nupkg
       
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
+        uses: NuGet/setup-nuget@main
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: latest
