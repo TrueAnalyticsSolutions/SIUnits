@@ -11,8 +11,9 @@
     <RepositoryUrl>git://github.com/TrueAnalyticsSolutions/SIUnits.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SIUnits</PackageTags>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <PackageReleaseNotes>Added Format function for easier humanizing processing.</PackageReleaseNotes>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

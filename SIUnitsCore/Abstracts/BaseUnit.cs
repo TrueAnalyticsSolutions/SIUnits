@@ -28,6 +28,10 @@
             this.Name = name;
             this.Base = baseQuantity;
         }
+
+        public string Format(decimal value) => $"{value}{Symbol}";
+        public string Format(int value) => $"{value}{Symbol}";
+        public string Format(double value) => $"{value}{Symbol}";
     }
 
 }
