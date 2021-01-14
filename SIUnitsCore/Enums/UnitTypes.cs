@@ -1,5 +1,6 @@
 ﻿namespace SIUnits {
     public enum UnitType {
+        Unknown = -1,
         Mass = 0,
         Length = 1,
         Time = 2,
