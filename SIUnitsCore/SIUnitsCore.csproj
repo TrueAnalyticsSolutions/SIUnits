@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcore3.1;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net45</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>tbm0115</Authors>
     <Company>True Analytics Manufacturing Solutions</Company>
@@ -11,8 +11,8 @@
     <RepositoryUrl>git://github.com/TrueAnalyticsSolutions/SIUnits.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SIUnits</PackageTags>
-    <Version>1.0.4</Version>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <Version>1.0.5</Version>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
     <PackageReleaseNotes>Added Unknown UnitType for custom, unhandled BaseUnits</PackageReleaseNotes>
   </PropertyGroup>
 
